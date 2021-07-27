@@ -18,6 +18,10 @@ bot = Bot(config.TELEGRAM_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
+async def on_startup(_: Dispatcher):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+
 def main():
     # noinspection PyUnresolvedReferences
     import app.handlers
@@ -26,6 +30,7 @@ def main():
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
         skip_updates=True,
+        on_startup=on_startup,
         host=WEBAPP_HOST,
         port=WEBAPP_PORT,
     )
