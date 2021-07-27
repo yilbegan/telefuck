@@ -29,7 +29,9 @@ class Brainfuck:
         stdin = StringIO(stdin)
         step = 0
 
-        while (limit is None or step < limit) and code_pointer < len(self.code):
+        while code_pointer < len(self.code):
+            if limit is not None and step > limit:
+                raise TimeoutError()
             current = self.code[code_pointer]
             if current == ".":
                 stdout += chr(memory[data_pointer])

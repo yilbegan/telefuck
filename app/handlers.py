@@ -13,7 +13,11 @@ async def main_handler(message: types.Message):
         f"{chr(random.randint(1, 10))}\0"  # random source
     )
 
-    result = fuck.evaluate(stdin)
+    try:
+        result = fuck.evaluate(stdin, limit=300000)
+    except TimeoutError:
+        return
+
     parsed = {}
     for field in result.split("\0"):
         if not field:
