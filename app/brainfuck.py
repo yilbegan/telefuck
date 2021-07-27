@@ -35,11 +35,15 @@ class Brainfuck:
                 stdout += chr(memory[data_pointer])
             elif current == ",":
                 c = stdin.read(1)
-                memory[data_pointer] = ord(c) if c else 0
+                memory[data_pointer] = min(ord(c), 255) if c else 0
             elif current == "+":
                 memory[data_pointer] += 1
+                if memory[data_pointer] > 255:
+                    memory[data_pointer] = 0
             elif current == "-":
                 memory[data_pointer] -= 1
+                if memory[data_pointer] < 0:
+                    memory[data_pointer] = 255
             elif current == ">":
                 data_pointer = min(self.memory_size - 1, data_pointer + 1)
             elif current == "<":
