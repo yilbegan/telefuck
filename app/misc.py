@@ -11,7 +11,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = config.PORT
-SCRIPT = Path(__file__).parent / "main.bf"
+SCRIPT = Path(__file__).parent.parent / "main.bf"
 fuck = Brainfuck(SCRIPT.open().read())
 
 bot = Bot(config.TELEGRAM_TOKEN, parse_mode=types.ParseMode.HTML)
