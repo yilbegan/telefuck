@@ -5,7 +5,7 @@ import random
 
 @dp.message_handler()
 async def main_handler(message: types.Message):
-    bucket: dict = await dp.storage.get_bucket()
+    bucket: dict = await dp.storage.get_bucket(user=message.from_user.id)
     bf_storage: str = bucket.get("bf_storage", "\1" * 10)
     stdin = (
         f"{message.text}\0"
@@ -25,4 +25,4 @@ async def main_handler(message: types.Message):
 
     if parsed.get("D"):
         bucket["bf_storage"] = parsed["D"]
-        await dp.storage.set_bucket(bucket)
+        await dp.storage.set_bucket(user=message.from_user.id, bucket=bucket)
