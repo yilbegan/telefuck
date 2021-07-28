@@ -1,6 +1,8 @@
 from aiogram import types
 from .misc import dp, fuck
+from .utils import create_image
 import random
+import io
 
 
 @dp.message_handler()
@@ -24,9 +26,19 @@ async def main_handler(message: types.Message):
             continue
         parsed[field[0]] = field[1:]
 
-    if parsed.get("A"):
-        await message.answer(parsed["A"])
-
     if parsed.get("D"):
         bucket["bf_storage"] = parsed["D"]
         await dp.storage.set_bucket(user=message.from_user.id, bucket=bucket)
+
+    if parsed.get("I"):
+        image = create_image(parsed["I"]).resize((630, 630))
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG")
+        buffer.seek(0)
+        await message.answer_photo(
+            photo=types.InputFile(buffer, filename="brainfuck.png"),
+            caption=parsed.get("A")
+        )
+
+    elif parsed.get("A"):
+        await message.answer(parsed["A"])
