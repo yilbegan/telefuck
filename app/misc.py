@@ -24,8 +24,7 @@ async def on_startup(_: Dispatcher):
 
 
 def main():
-    # noinspection PyUnresolvedReferences
-    import app.handlers
+    import app.handlers  # noqa
 
     if not config.PRODUCTION:
         executor.start_polling(dp, skip_updates=True)
