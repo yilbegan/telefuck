@@ -12,6 +12,21 @@
   <img alt="Code Style" src="https://img.shields.io/badge/code%20style-black-black?style=flat-square">
 </p>
 
+## Installation
+
+```
+$ pip install -r requirements.txt
+$ export TELEGRAM_TOKEN=<...>
+$ python -m app
+```
+
+## Docker
+
+```
+$ docker pull ghcr.io/yilbegan/telefuck:latest
+$ docker run -e TELEGRAM_TOKEN=<...> ghcr.io/yilbegan/telefuck:latest
+```
+
 ## Commands
 
 Command | Description
