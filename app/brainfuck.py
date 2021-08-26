@@ -4,16 +4,44 @@ from io import StringIO
 __all__ = ("Brainfuck",)
 
 
+def preprocess_brainfuck(code: str) -> list[tuple[str, Optional[int]]]:
+    preprocessed = []
+    pointer = 0
+    difference = 0
+
+    for i in code:
+        if i not in "+-<>[].,":
+            continue
+        if i == "+":
+            difference += 1
+        elif i == "-":
+            difference -= 1
+        elif difference:
+            preprocessed.append(("add", difference))
+            difference = 0
+        if i == ">":
+            pointer += 1
+        elif i == "<":
+            pointer -= 1
+        elif pointer:
+            preprocessed.append(("move", pointer))
+            pointer = 0
+        if i in "[].,":
+            preprocessed.append((i, None))
+
+    return preprocessed
+
+
 class Brainfuck:
     def __init__(self, code: str, memory_size: int = 30000):
-        self.code = [i for i in code if i in "+-<>[].,"]
+        self.code = preprocess_brainfuck(code)
         self.memory_size = memory_size
         self.brace_map = {}
         self.build_brace_map()
 
-    def build_brace_map(self):
+    def build_brace_map(self) -> None:
         stack = []
-        for i, c in enumerate(self.code):
+        for i, (c, _) in enumerate(self.code):
             if c == "[":
                 stack.append(i)
             elif c == "]":
@@ -32,24 +60,16 @@ class Brainfuck:
         while code_pointer < len(self.code):
             if limit is not None and step > limit:
                 raise TimeoutError()
-            current = self.code[code_pointer]
+            current, value = self.code[code_pointer]
             if current == ".":
                 stdout += chr(memory[data_pointer])
             elif current == ",":
                 c = stdin.read(1)
                 memory[data_pointer] = min(ord(c), 254) if c else 0
-            elif current == "+":
-                memory[data_pointer] += 1
-                if memory[data_pointer] > 255:
-                    memory[data_pointer] = 0
-            elif current == "-":
-                memory[data_pointer] -= 1
-                if memory[data_pointer] < 0:
-                    memory[data_pointer] = 255
-            elif current == ">":
-                data_pointer = min(self.memory_size - 1, data_pointer + 1)
-            elif current == "<":
-                data_pointer = max(0, data_pointer - 1)
+            elif current == "add":
+                memory[data_pointer] = (memory[data_pointer] + value) % 256
+            elif current == "move":
+                data_pointer = (data_pointer + value) % self.memory_size
             elif current == "[" and not memory[data_pointer]:
                 code_pointer = self.brace_map[code_pointer]
             elif current == "]" and memory[data_pointer]:
