@@ -16,7 +16,7 @@ async def main_handler(message: types.Message):
     )
 
     try:
-        result = fuck.evaluate(stdin, limit=300000)
+        result = fuck.evaluate(stdin, limit=100000)
     except TimeoutError:
         return
 
@@ -37,7 +37,7 @@ async def main_handler(message: types.Message):
         buffer.seek(0)
         await message.answer_photo(
             photo=types.InputFile(buffer, filename="brainfuck.png"),
-            caption=parsed.get("A")
+            caption=parsed.get("A"),
         )
 
     elif parsed.get("A"):
