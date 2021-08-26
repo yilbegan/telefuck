@@ -4,7 +4,7 @@
   </a>
 </p>
 <h1 align="center">
-    Telegram bot written on brainfuck and python
+    Telegram bot written in brainfuck and python
 </h1>
 <p align="center">
   <img alt="Code Quality" src="https://img.shields.io/codacy/grade/4eb122242c294386a61dc26c143e91a9?style=flat-square">
