@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import Optional, Sequence
 from io import StringIO
 
 __all__ = ("Brainfuck",)
 
 
-def preprocess_brainfuck(code: str) -> list[tuple[str, Optional[int]]]:
+def preprocess_brainfuck(code: str) -> Sequence[tuple[str, int]]:
     preprocessed = []
     pointer = 0
     difference = 0
@@ -27,7 +27,7 @@ def preprocess_brainfuck(code: str) -> list[tuple[str, Optional[int]]]:
             preprocessed.append(("move", pointer))
             pointer = 0
         if i in "[].,":
-            preprocessed.append((i, None))
+            preprocessed.append((i, 0))
 
     return preprocessed
 
@@ -36,7 +36,7 @@ class Brainfuck:
     def __init__(self, code: str, memory_size: int = 30000):
         self.code = preprocess_brainfuck(code)
         self.memory_size = memory_size
-        self.brace_map = {}
+        self.brace_map: dict[int, int] = {}
         self.build_brace_map()
 
     def build_brace_map(self) -> None:
@@ -51,10 +51,10 @@ class Brainfuck:
 
     def evaluate(self, stdin: str = "", limit: Optional[int] = None) -> str:
         memory = [0 for _ in range(self.memory_size)]
+        stdin_buffer = StringIO(stdin)
         code_pointer = 0
         data_pointer = 0
         stdout = ""
-        stdin = StringIO(stdin)
         step = 0
 
         while code_pointer < len(self.code):
@@ -64,7 +64,7 @@ class Brainfuck:
             if current == ".":
                 stdout += chr(memory[data_pointer])
             elif current == ",":
-                c = stdin.read(1)
+                c = stdin_buffer.read(1)
                 memory[data_pointer] = min(ord(c), 254) if c else 0
             elif current == "add":
                 memory[data_pointer] = (memory[data_pointer] + value) % 256
