@@ -24,7 +24,7 @@ async def on_startup(_: Dispatcher):
 
 
 def main():
-    import app.handlers  # noqa
+    import telefuck.handlers  # noqa
 
     if not config.PRODUCTION:
         executor.start_polling(dp, skip_updates=True)
