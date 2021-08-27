@@ -17,7 +17,7 @@
 ```
 $ pip install -r requirements.txt
 $ export TELEGRAM_TOKEN=<...>
-$ python -m app
+$ python -m telefuck
 ```
 
 ## Docker
@@ -38,4 +38,4 @@ Command | Description
 ## Todo
 
 - [ ] Add more games
-- [ ] Optimize interpeter
+- [ ] Optimize interpreter
